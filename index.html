@@ -252,6 +252,35 @@ h1,h2,h3{font-weight:800; letter-spacing:-0.02em;}
   .consultation-inner{grid-template-columns:1fr;}
   .hero h1{font-size:28px;}
 }
+
+.status-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 15px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.status-alert.success {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #a5d6a7;
+}
+
+.status-alert.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -565,14 +594,29 @@ h1,h2,h3{font-weight:800; letter-spacing:-0.02em;}
     })
     .then(response => response.json())
     .then(data => {
-      if (data.ok) {
-        statusText.style.color = "#1a8a4a";
-        statusText.innerText = "✓ Arizangiz muvaffaqiyatli yuborildi! Tez orada siz bilan bog'lanamiz.";
-        document.getElementById('consultationForm').reset();
-      } else {
-        throw new Error(data.description || 'Xatolik yuz berdi');
-      }
-    })
+  if (data.ok) {
+    statusText.innerHTML = `
+      <div class="status-alert success">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        <span>Arizangiz muvaffaqiyatli yuborildi! Tez orada siz bilan bog'lanamiz.</span>
+      </div>`;
+    document.getElementById('consultationForm').reset();
+  } else {
+    throw new Error(data.description || 'Xatolik yuz berdi');
+  }
+})
+.catch(error => {
+  console.error('Telegram API Error:', error);
+  statusText.innerHTML = `
+    <div class="status-alert error">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+      </svg>
+      <span>Arizani yuborishda xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.</span>
+    </div>`;
+})
     .catch(error => {
       console.error('Telegram API Error:', error);
       statusText.style.color = "#E31E3D";
