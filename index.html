@@ -423,33 +423,101 @@ h1,h2,h3{font-weight:800; letter-spacing:-0.02em;}
 
     <form class="consultation-form" id="consultationForm" onsubmit="return false;">
       <div class="form-group">
-        <label for="fullname">Ismingiz *</label>
-        <input type="text" id="fullname" name="fullname" required placeholder="Ism Familiya">
-      </div>
-      <div class="form-group">
-        <label for="phone">Telefon raqamingiz *</label>
-        <input type="tel" id="phone" name="phone" required placeholder="+998 90 123 45 67">
-      </div>
-      <div class="form-group">
-        <label for="department">Yo'nalish</label>
-        <select id="department" name="department">
-          <option value="Terapiya">Terapiya</option>
-          <option value="Kardiologiya">Kardiologiya</option>
-          <option value="Urologiya / Androlgiya">Urologiya / Androlgiya</option>
-          <option value="Ginekologiya">Ginekologiya</option>
-          <option value="Flebologiya">Flebologiya</option>
-          <option value="Diagnostika / Laboratoriya">Diagnostika / Laboratoriya</option>
-          <option value="Boshqa">Boshqa</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="message">Qo'shimcha izoh</label>
-        <textarea id="message" name="message" rows="3" placeholder="Shikoyatingiz yoki savolingizni yozing (ixtiyoriy)"></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary-solid form-submit">Ariza yuborish</button>
-      <p class="form-status" id="formStatus" style="color:#888;">Bu — statik preview. Jonli saytda ariza Telegram guruhiga yuboriladi.</p>
-    </form>
-  </div>
+      <label for="fullname">Ism va Familiya *</label>
+      <input type="text" id="fullname" placeholder="Masalan: Ali Valiyev" required>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Telefon raqam *</label>
+      <input type="tel" id="phone" placeholder="+998 90 123 45 67" required>
+    </div>
+
+    <div class="form-group">
+      <label for="department">Yo'nalishni tanlang *</label>
+      <select id="department" required>
+        <option value="">-- Tanlang --</option>
+        <option value="Kardiologiya">Kardiologiya</option>
+        <option value="Nevrologiya">Nevrologiya</option>
+        <option value="Pediatriya">Pediatriya</option>
+        <option value="Umumiy ko'rik">Umumiy ko'rik</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="message">Qo'shimcha izoh</label>
+      <textarea id="message" rows="3" placeholder="Sizni nima bezovta qilyapti?"></textarea>
+    </div>
+
+    <button type="submit" class="btn-submit">Ariza yuborish</button>
+  </form>
+
+  <div id="formStatus" class="form-status"></div>
+</div>
+
+<script>
+  // Telegram Bot sozlamalari (O'zingizning ma'lumotlaringizni qo'ying)
+  const BOT_TOKEN = '8829415191:AAGIfcoFs1DAiQ-RYU26FQpMShXO0owGmmM'; 
+  const CHAT_ID = '-5497727405';       
+
+  document.getElementById('consultationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const statusText = document.getElementById('formStatus');
+    const submitBtn = this.querySelector('button[type="submit"]');
+
+    // Tugma va holat matnini yangilash
+    submitBtn.innerText = "Yuborilmoqda...";
+    submitBtn.disabled = true;
+    statusText.style.color = "#201A1D";
+    statusText.innerText = "Ariza yuborilmoqda, iltimos kuting...";
+
+    // Forma qiymatlarini olish
+    const fullname = document.getElementById('fullname').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const department = document.getElementById('department').value;
+    const message = document.getElementById('message').value.trim() || 'Izoh qoldirilmagan';
+
+    // Telegram uchun xabar formati
+    const text = `🏥 *AKIF Medical Center - Yangi Ariza!*\n\n` +
+                 `👤 *Ism-Familiya:* ${fullname}\n` +
+                 `📞 *Telefon:* ${phone}\n` +
+                 `🩺 *Yo'nalish:* ${department}\n` +
+                 `📝 *Izoh:* ${message}\n\n` +
+                 `📅 *Sana:* ${new Date().toLocaleString('uz-UZ')}`;
+
+    // Telegram Bot API so'rovi
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: text,
+        parse_mode: 'Markdown'
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.ok) {
+        statusText.style.color = "#1a8a4a";
+        statusText.innerText = "✓ Arizangiz muvaffaqiyatli yuborildi! Tez orada siz bilan bog'lanamiz.";
+        document.getElementById('consultationForm').reset();
+      } else {
+        throw new Error(data.description || 'Xatolik yuz berdi');
+      }
+    })
+    .catch(error => {
+      console.error('Telegram API Error:', error);
+      statusText.style.color = "#E31E3D";
+      statusText.innerText = "✖ Arizani yuborishda xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.";
+    })
+    .finally(() => {
+      submitBtn.innerText = "Ariza yuborish";
+      submitBtn.disabled = false;
+    });
+  });
+</script>
 </section>
 
 <footer class="footer">
