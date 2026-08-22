@@ -188,6 +188,63 @@ h1,h2,h3{font-weight:800; letter-spacing:-0.02em;}
   border-radius: 12px;
   flex-shrink: 0;
 }
+.form-container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 450px;
+    }
+    .form-container h2 {
+      margin-top: 0;
+      color: #201A1D;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: #1a8a4a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .btn-submit:hover {
+      background-color: #146c3a;
+    }
+    .btn-submit:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    .form-status {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
 
 
 @media (max-width: 860px){
@@ -433,13 +490,22 @@ h1,h2,h3{font-weight:800; letter-spacing:-0.02em;}
     </div>
 
     <div class="form-group">
-      <label for="department">Yo'nalishni tanlang *</label>
+      <label for="department">Mutaxassis qabulini tanlang *</label>
       <select id="department" required>
         <option value="">-- Tanlang --</option>
-        <option value="Kardiologiya">Kardiologiya</option>
-        <option value="Nevrologiya">Nevrologiya</option>
-        <option value="Pediatriya">Pediatriya</option>
+        <option value="Kardiolog">Kardiolog</option>
+        <option value="Ginekolog">Ginekolog</option>
+        <option value="Nevrolog">Nevrolog</option>
+        <option value="Neyroxirurg">Neyroxirurg</option>
+        <option value="Urolog">Urolog</option>
+        <option value="Dermatolog/Kosmetolog">Dermatolog/Kosmetolog</option>
+        <option value="Flebolog/Qon-tomir">Flebolog/Qon-tomir</option>
+        <option value="LOR">LOR</option>
+        <option value="Stomatolog">Stomatolog</option>
+        <option value="Gastroenterolog">Gastroenterolog</option>
+        <option value="Pediatr">Pediatr</option>
         <option value="Umumiy ko'rik">Umumiy ko'rik</option>
+        <option value="Boshqa">Boshqa</option>
       </select>
     </div>
 
